@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+   <appender name="Debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>logs/server/debug.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         <!-- daily rollover -->
+         <fileNamePattern>logs/server/debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+         <maxHistory>7</maxHistory>
+      </rollingPolicy>
+      <encoder>
+         <pattern>%date-[%-5level] [%thread] [%logger{35}] - %msg %n</pattern>
+      </encoder>
+   </appender>
+   
+   <appender name="Server" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>logs/server/server.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         <!-- daily rollover -->
+         <fileNamePattern>logs/server/server.%d{yyyy-MM-dd}.log</fileNamePattern>
+         <maxHistory>7</maxHistory>
+      </rollingPolicy>
+      <encoder>
+         <pattern>%date-[%-5level] [%thread] [%logger{35}] - %msg %n</pattern>
+      </encoder>
+   </appender>
+   
+   <logger name="mazegame.simple.server" level="INFO" additivity="false">
+      <appender-ref ref="Server" />
+   </logger>
+   
+   <root level="INFO">
+      <appender-ref ref="Debug" />
+   </root>
+   
+</configuration>
