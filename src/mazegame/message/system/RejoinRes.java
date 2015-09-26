@@ -15,9 +15,9 @@ import mazegame.messages.ResponseMsg;
  *
  */
 public class RejoinRes extends ResponseMsg {
-	// The new back up address, maybe empty if not ready
+	// The new back up address, maybe not ready
 	private String backupAddr;
-	// The backup listening port, -1 if not ready
+	// The backup listening port, maybe not ready
 	private int backupPort;
 	// The current world snapshot
 	private WorldSnapshot snapshot;

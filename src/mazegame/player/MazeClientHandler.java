@@ -120,7 +120,7 @@ public class MazeClientHandler extends SimpleChannelInboundHandler<MazeMessage> 
 		
 		switch(msg.getType()) {
 			case JOIN_GAME_RESPONSE:
-				player.onJoinGameReplied((JoinGameRes)msg);
+				handleJoinGameRes((JoinGameRes)msg);
 				break;
 			case GAME_STARTED:
 				player.onGameStarted((GameStartedMsg)msg);
@@ -149,6 +149,16 @@ public class MazeClientHandler extends SimpleChannelInboundHandler<MazeMessage> 
 		}
 	}
 	
+	private void handleJoinGameRes(JoinGameRes join) {
+		// Update backup information
+		backupAddr = join.getBackupAddr();
+		backupPort = join.getBackupPort();
+		logger.info("[UPDATE_BACKUP]: {}:{}", backupAddr, backupPort);
+		
+		// Hand over to player
+		player.onJoinGameReplied(join);
+	}
+	
 	private void handleBackupChangedMsg(BackupChangedMsg backupChanged) {
 		backupAddr = backupChanged.getBackupAddr();
 		backupPort = backupChanged.getBackupPort();
@@ -156,11 +166,10 @@ public class MazeClientHandler extends SimpleChannelInboundHandler<MazeMessage> 
 	}
 	
 	private void handleRejoinRes(RejoinRes rejoin) {
-		if(rejoin.getStatus()) {
-			backupAddr = rejoin.getBackupAddr();
-			backupPort = rejoin.getBackupPort();
-			logger.info("[UPDATE_BACKUP]: {}:{}", backupAddr, backupPort);
-		}
+		// Update backup information
+		backupAddr = rejoin.getBackupAddr();
+		backupPort = rejoin.getBackupPort();
+		logger.info("[UPDATE_BACKUP]: {}:{}", backupAddr, backupPort);
 		
 		// Hand over to player
 		player.onRejoinReplied(rejoin);
@@ -188,10 +197,18 @@ public class MazeClientHandler extends SimpleChannelInboundHandler<MazeMessage> 
 				writeToChannel(response);
 				
 				try {
-					// Block
+					// Call Block
 					MazeServer.init(port, true);
 				} catch(Exception ex) {
 					logger.error("[BACKUP_DOWN]", ex);
+					
+					// Downgrade player type
+					nodeType = MNodeType.CLIENT;
+					logger.info("[NODE_TYPE_CHANGE]: Downgrade Backup Player To Client");
+					
+					// Alert primary server
+					response.setStatus(false);
+					writeToChannel(response);
 				}
 			}
 		});

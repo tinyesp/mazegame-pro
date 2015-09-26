@@ -260,6 +260,9 @@ public class MazeServerHandler extends SimpleChannelInboundHandler<MazeMessage> 
 		boostrapGame();
 		
 		JoinGameRes response = new JoinGameRes();
+		response.setBackupAddr(backupAddr);
+		response.setBackupPort(backupPort);
+		
 		try {
 			id = mazeWorld.addPlayer();
 			ctxMap.put(id, ctx);

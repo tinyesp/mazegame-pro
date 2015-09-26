@@ -65,7 +65,7 @@ public class CommandPlayer implements IPlayer {
 	        	}
 	        	
 	        	break;
-	        } while(option < 0);
+	        } while(option < 0 || option > 5);
 	        
 	        if(option == 5) {
 	        	// Send out quit message

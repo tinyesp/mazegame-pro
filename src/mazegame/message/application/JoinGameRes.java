@@ -23,6 +23,11 @@ public class JoinGameRes extends ResponseMsg {
 	// Total created treasures
 	private int totalTreasures;
 	
+	// The new back up address, maybe not ready
+	private String backupAddr;
+	// The backup listening port, maybe not ready
+	private int backupPort;
+	
 	public JoinGameRes() {
 		super(MazeMsgType.JOIN_GAME_RESPONSE);
 	}
@@ -37,6 +42,9 @@ public class JoinGameRes extends ResponseMsg {
 		mdout.writeInt(length);
 		mdout.writeInt(width);
 		mdout.writeInt(totalTreasures);
+		
+		mdout.writeString(backupAddr);
+		mdout.writeInt(backupPort);
 	}
 
 	@Override
@@ -49,6 +57,9 @@ public class JoinGameRes extends ResponseMsg {
 		length = mdin.readInt();
 		width = mdin.readInt();
 		totalTreasures = mdin.readInt();
+		
+		backupAddr = mdin.readString();
+		backupPort = mdin.readInt();
 	}
 
 	public int getId() {
@@ -81,6 +92,22 @@ public class JoinGameRes extends ResponseMsg {
 
 	public void setTotalTreasures(int totalTreasures) {
 		this.totalTreasures = totalTreasures;
+	}
+
+	public String getBackupAddr() {
+		return backupAddr;
+	}
+
+	public void setBackupAddr(String backupAddr) {
+		this.backupAddr = backupAddr;
+	}
+
+	public int getBackupPort() {
+		return backupPort;
+	}
+
+	public void setBackupPort(int backupPort) {
+		this.backupPort = backupPort;
 	}
 
 }
